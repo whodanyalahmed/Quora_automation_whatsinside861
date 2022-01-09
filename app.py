@@ -84,7 +84,8 @@ while True:
         continue
 driver.implicitly_wait(10)
 # time.sleep(5)
-xpath_for_space_name = "//*[contains(text(), 'Best riddles of 2022')]"
+name_of_space = "Best riddles of 2020"
+xpath_for_space_name = "//*[contains(text(), '"+name_of_space+"')]"
 len_of_space_name = len(driver.find_elements_by_xpath(xpath_for_space_name))
 if len_of_space_name > 0:
     print(len_of_space_name)
@@ -106,7 +107,7 @@ if len_of_space_name > 0:
     driver.switch_to.window(driver.window_handles[0])
     print('info: switched to new tab')
     # close tab 1
-    
+
 else:
     print('info: space not exist already creating one')
     print(len_of_space_name)
@@ -132,7 +133,7 @@ else:
         textelement.send_keys(Keys.CONTROL + 'a')
         textelement.send_keys(Keys.DELETE)
         print("info: input box cleared")
-        textelement.send_keys("Best riddles of 2022")
+        textelement.send_keys(name_of_space)
         print('info: space name filled')
     except Exception as e:
         print("error: space name not found")
@@ -152,7 +153,8 @@ else:
         time.sleep(10)
         try:
             ele = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-                "//html/body/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[1]/div[1]/button"))
+                "//html/body/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/button"))
+
             ele.click()
             print('info: invite modal closed')
             break
@@ -163,7 +165,8 @@ else:
 # clicking gear icon
 
 try:
-    current_url = driver.current_url + "/settings"
+    setting_url = driver.current_url + "/settings"
+    driver.get(setting_url)
     print('info: gear icon clicked')
 except Exception as e:
     print("error: gear icon not found")
@@ -175,7 +178,7 @@ while True:
     # disabling post content type
     try:
         checkbox = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-            "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]"))
+            "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label"))
         checkbox.click()
         print('info: post content type disabled')
         break
