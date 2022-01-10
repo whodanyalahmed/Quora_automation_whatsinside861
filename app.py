@@ -74,8 +74,10 @@ except NoSuchElementException:
 while True:
     time.sleep(5)
     try:
+        xpath_for_login_btn = "//*[contains(text(), 'Login')]"
+
         driver.find_element_by_xpath(
-            '//html/body/div[2]/div[2]/div/div/div/div/div[2]/div[2]/div[5]/button').click()
+            '//button[.'+xpath_for_login_btn + ']').click()
         print('info: login button clicked')
         break
     except Exception as e:
@@ -84,7 +86,7 @@ while True:
         continue
 driver.implicitly_wait(10)
 # time.sleep(5)
-name_of_space = "Best riddles of 2020"
+name_of_space = "Best riddles of 2005"
 xpath_for_space_name = "//*[contains(text(), '"+name_of_space+"')]"
 len_of_space_name = len(driver.find_elements_by_xpath(xpath_for_space_name))
 if len_of_space_name > 0:
@@ -117,6 +119,7 @@ else:
         try:
             element = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
                 (By.XPATH, "//html/body/div[2]/div[2]/div[3]/div/div/div[1]/div/div[1]/div/div/div/div/div[2]")))
+
             element.click()
             print('info: space created button clicked')
             break
@@ -152,9 +155,13 @@ else:
     while True:
         time.sleep(10)
         try:
-            ele = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-                "//html/body/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/button"))
 
+            xpath_for_skip_importing = "//*[contains(text(), 'Skip importing')]"
+            ele = driver.find_element_by_xpath(
+                "//button[."+xpath_for_skip_importing+"]")
+
+            # print(ele.tag_name)
+            # print(ele.get_attribute('innerHTML'))
             ele.click()
             print('info: invite modal closed')
             break
@@ -162,8 +169,27 @@ else:
             print("error: invite modal not found")
             print(e)
             continue
-# clicking gear icon
+    while True:
+        driver.implicitly_wait(15)
+        try:
 
+            xpath_for_skip_import = "//span[@name='Close']"
+            skip_ele1 = driver.find_elements_by_xpath(
+                "//button[."+xpath_for_skip_import+"]")
+            # loop on skin_ele and get innerHTML
+            for ele in skip_ele1:
+                print(ele.tag_name)
+                print(ele.get_attribute('innerHTML'))
+                ele.click()
+            print('info: skip invite friends')
+            break
+        except Exception as e:
+            print("error: skip invite friends not found")
+            print(e)
+            continue
+
+            # clicking gear icon
+time.sleep(10)
 try:
     setting_url = driver.current_url + "/settings"
     driver.get(setting_url)
@@ -171,7 +197,7 @@ try:
 except Exception as e:
     print("error: gear icon not found")
     print(e)
-
+time.sleep(5)
 # scroll to 1000px
 while True:
     driver.execute_script("window.scrollTo(0, 1000);")
