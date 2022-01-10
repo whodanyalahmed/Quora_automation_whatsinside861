@@ -86,7 +86,7 @@ while True:
         continue
 driver.implicitly_wait(10)
 # time.sleep(5)
-name_of_space = "Best riddles of 2005"
+name_of_space = "Best riddles of 1997"
 xpath_for_space_name = "//*[contains(text(), '"+name_of_space+"')]"
 len_of_space_name = len(driver.find_elements_by_xpath(xpath_for_space_name))
 if len_of_space_name > 0:
@@ -151,36 +151,35 @@ else:
         print("error: space created button not found")
         print(e)
 
-    # closing invite modal
-    while True:
-        time.sleep(10)
-        try:
+    # # closing invite modal
+    # while True:
+    #     time.sleep(10)
+    #     try:
 
-            xpath_for_skip_importing = "//*[contains(text(), 'Skip importing')]"
-            ele = driver.find_element_by_xpath(
-                "//button[."+xpath_for_skip_importing+"]")
+    #         xpath_for_skip_importing = "//*[contains(text(), 'Skip importing')]"
+    #         ele = driver.find_element_by_xpath(
+    #             "//button[."+xpath_for_skip_importing+"]")
 
-            # print(ele.tag_name)
-            # print(ele.get_attribute('innerHTML'))
-            ele.click()
-            print('info: invite modal closed')
-            break
-        except Exception as e:
-            print("error: invite modal not found")
-            print(e)
-            continue
+    #         # print(ele.tag_name)
+    #         # print(ele.get_attribute('innerHTML'))
+    #         ele.click()
+    #         print('info: invite modal closed')
+    #         break
+    #     except Exception as e:
+    #         print("error: invite modal not found")
+    #         print(e)
+        # continue
     while True:
-        driver.implicitly_wait(15)
+        time.sleep(5)
         try:
 
             xpath_for_skip_import = "//span[@name='Close']"
             skip_ele1 = driver.find_elements_by_xpath(
                 "//button[."+xpath_for_skip_import+"]")
             # loop on skin_ele and get innerHTML
-            for ele in skip_ele1:
-                print(ele.tag_name)
-                print(ele.get_attribute('innerHTML'))
-                ele.click()
+            print("No. of close buttons: "+str(len(skip_ele1)))
+            ele_item = skip_ele1[-2]
+            driver.execute_script("arguments[0].click();", ele_item)
             print('info: skip invite friends')
             break
         except Exception as e:
