@@ -238,29 +238,44 @@ except Exception as e:
     print("error: gear icon not found")
     print(e)
 # scroll to 1000px
+time.sleep(5)
+driver.execute_script("window.scrollTo(0, 1000);")
+# check if already disabled
+checked = False
+try:
+    d = driver.find_element_by_xpath(
+        "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label/input")
+    checked = str(d.get_attribute('aria-checked')).capitalize()
+    print(checked)
+    print('info: getting aria-checked')
+except Exception as e:
+    print("error: cannot get aria-checked")
+    print(e)
 while True:
-    time.sleep(5)
-    driver.execute_script("window.scrollTo(0, 1000);")
     # disabling post content type
-    try:
-        checkbox = driver.find_element_by_xpath(
-            # "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label/div[3]"))
-            "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label")
-        # /html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label/input
-        # /html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label
+    if (checked == 'True'):
         try:
-            checkbox.click()
-            print("info: using click")
-        except Exception as e:
-            print("info: using javascript")
-            driver.execute_script("arguments[0].click();", checkbox)
+            checkbox = driver.find_element_by_xpath(
+                # "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label/div[3]"))
+                "//html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label")
+            # /html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label/input
+            # /html/body/div[2]/div[2]/div[4]/div/div[2]/div/div[6]/div[2]/div[3]/div/div[1]/label
+            try:
+                checkbox.click()
+                print("info: using click")
+            except Exception as e:
+                print("info: using javascript")
+                driver.execute_script("arguments[0].click();", checkbox)
 
-        print('info: post content type disabled')
+            print('info: post content type disabled')
+            break
+        except Exception as e:
+            print("error: post content type not found")
+            print(e)
+            continue
+    else:
+        print('info: post content type already disabled')
         break
-    except Exception as e:
-        print("error: post content type not found")
-        print(e)
-        continue
 driver.back()
 print("info: back button clicked")
 
@@ -276,14 +291,14 @@ for question in range(len(questions)):
 
     try:
         driver.find_element_by_xpath(
-            "//*[contains(text(), 'Post in ')]").click()
+            "//*[contains(text(), 'Ask in ')]").click()
         print('info: post in space clicked')
     except Exception as e:
         print("error: post in space not found")
         print(e)
     try:
         txt_input = driver.find_element_by_xpath(
-            '//div[@data-placeholder="Say something..."]')
+            '//textarea[@placeholder="What is your question?"]')
         print('info: text area clicked')
         txt_input.click()
         txt_input.send_keys(Keys.CONTROL + 'a')
