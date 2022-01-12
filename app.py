@@ -8,10 +8,12 @@ from sys import platform
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as EC, wait
 from selenium.webdriver.common.by import By
 # import first column of data from xlsx file
 import pandas as pd
+from os import listdir, getcwd
+from os.path import isfile, join
 
 
 def get_data_from_xlsx(file_name, sheet_name, column_name):
@@ -22,6 +24,9 @@ def get_data_from_xlsx(file_name, sheet_name, column_name):
 
 questions = get_data_from_xlsx('data.xlsx', 'Question', 'Question')
 answers = get_data_from_xlsx('data.xlsx', 'Question', 'Hyerlink')
+files_path = getcwd() + "/images/"
+pics = [f for f in listdir(
+    files_path) if isfile(join(files_path, f))]
 
 cur_path = sys.path[0]
 load_dotenv(dotenv_path='.env')
@@ -64,6 +69,29 @@ def Click_on(tag, text):
         driver.find_element_by_xpath(
             '//'+tag+'[.'+xpath_for_OK_btn + ']').click()
         print('info: '+text+' button/text clicked')
+    except Exception as e:
+        print("error: "+text+" button/text not found")
+        print(e)
+
+
+def last_of_Click_on(text):
+    time.sleep(5)
+    try:
+
+        xpath_for_skip_import = "//span[@name='"+text+"']"
+        skip_ele1 = driver.find_elements_by_xpath(
+            "//button[."+xpath_for_skip_import+"]")
+        # loop on skin_ele and get innerHTML
+        # print("No. of close buttons: "+str(len(skip_ele1)))
+        ele_item = skip_ele1[0]
+        try:
+            print("info: "+text+" button/text using try clicked")
+            ele_item.click()
+        except:
+            print("error: "+text+" button/text not found now using except")
+            driver.execute_script("arguments[0].click();", ele_item)
+        print('info: '+text+' button/text clicked')
+
     except Exception as e:
         print("error: "+text+" button/text not found")
         print(e)
@@ -127,9 +155,9 @@ Clicking_on('button', 'Login')
 #         print("error: login button not found")
 #         print(e)
 #         continue
-driver.implicitly_wait(10)
+driver.implicitly_wait(30)
 # time.sleep(5)
-name_of_space = "Best riddles of 2004"
+name_of_space = "Best riddles of 1991"
 xpath_for_space_name = "//*[contains(text(), '"+name_of_space+"')]"
 len_of_space_name = len(driver.find_elements_by_xpath(xpath_for_space_name))
 if len_of_space_name > 0:
@@ -185,7 +213,7 @@ else:
     # pressing create button
     try:
         driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/button").click()
+            "//html/body/div[2]/div[2]/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/button").click()
         print('info: space created button clicked')
 
     except Exception as e:
@@ -281,20 +309,25 @@ print("info: back button clicked")
 
 # clicking not now
 
-Click_on('button', 'Not now')
-Click_on('button', 'OK')
+try:
+    Click_on('button', 'Not now')
+except Exception as e:
+    print("error: not now button not found")
+    print(e)
+finally:
+    Click_on('button', 'OK')
 
 
 time.sleep(5)
-driver.execute_script("window.scrollTo(0, 1000);")
+driver.execute_script("window.scrollTo(0, 400);")
 for question in range(len(questions)):
 
     try:
         driver.find_element_by_xpath(
             "//*[contains(text(), 'Ask in ')]").click()
-        print('info: post in space clicked')
+        print('info: Ask in space clicked')
     except Exception as e:
-        print("error: post in space not found")
+        print("error: Ask in space not found")
         print(e)
     try:
         txt_input = driver.find_element_by_xpath(
@@ -304,6 +337,48 @@ for question in range(len(questions)):
         txt_input.send_keys(Keys.CONTROL + 'a')
         txt_input.send_keys(Keys.DELETE)
         txt_input.send_keys(questions[question])
+        Click_on('button', "Ask")
+        # closing modal
+        time.sleep(5)
+        try:
+
+            xpath_for_skip_import = "//span[@name='Close']"
+            skip_ele1 = driver.find_elements_by_xpath(
+                "//button[."+xpath_for_skip_import+"]")
+            elem = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
+                (By.XPATH, "//button[."+xpath_for_skip_import+"]")))
+
+            # loop on skin_ele and get innerHTML
+            # print("No. of close buttons: "+str(len(skip_ele1)))
+            # ele_item = skip_ele1[-2]
+            driver.execute_script("arguments[0].click();", elem)
+            print('info: skip invite friends')
+
+        except Exception as e:
+            print("error: skip invite friends not found")
+            print(e)
+
+        last_of_Click_on('Answer')
+        ans = driver.find_element_by_xpath(
+            '//div[@data-placeholder="Write your answer"]')
+        ans.click()
+        ans.send_keys(answers[question])
+        try:
+            driver.find_element_by_xpath(
+                '//input[@type="file"]').send_keys(files_path+pics[question])
+            print('info: pics uploaded')
+            time.sleep(10)
+        except Exception as e:
+            print("error: cant upload pics")
+            print(e)
+        Click_on('button', 'Post')
+        time.sleep(5)
+        try:
+            driver.back()
+            print("info: going back")
+        except Exception as e:
+            print("error: cant go back")
+            print(e)
     except Exception as e:
         print("error: text area not found")
         print(e)
