@@ -417,7 +417,6 @@ for name_of_space in spaces:
                     '//input[@placeholder="Enter URL"]')
                 url_textbox.send_keys(
                     links[question])
-                time.sleep(2)
                 url_textbox.send_keys(Keys.ENTER)
                 ans.send_keys(Keys.ARROW_RIGHT)
 
