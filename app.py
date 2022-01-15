@@ -390,10 +390,13 @@ for name_of_space in spaces:
             ans = driver.find_elements_by_xpath(
                 '//div[@data-placeholder="Write your answer"]')[0]
             ans.click()
+
             ans.send_keys(answers[question])
             ans.click()
+            ans.send_keys(Keys.CONTROL + Keys.SHIFT + Keys.ARROW_LEFT)
+
             # select the answer
-            ans.send_keys(Keys.CONTROL + 'a')
+            # ans.send_keys(Keys.CONTROL + 'a')
             linktag = driver.find_elements_by_xpath(
                 "//span[@name='EditorLink']")[-1]
             # "//div[.//span[@name='EditorLink']]")
@@ -416,6 +419,8 @@ for name_of_space in spaces:
                     links[question])
                 time.sleep(2)
                 url_textbox.send_keys(Keys.ENTER)
+                ans.send_keys(Keys.ARROW_RIGHT)
+
                 # try:
                 #     xpath_for_OK_btn = "//*[contains(text(), 'Add')]"
 
@@ -430,6 +435,7 @@ for name_of_space in spaces:
             except Exception as e:
                 print("error: cant add url and click add")
                 print(e)
+            # upload file
             try:
                 driver.find_element_by_xpath(
                     '//input[@type="file"]').send_keys(files_path+pics[question])
@@ -438,6 +444,7 @@ for name_of_space in spaces:
             except Exception as e:
                 print("error: cant upload pics")
                 print(e)
+
             try:
 
                 Click_on('button', 'Post')
