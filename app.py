@@ -418,7 +418,8 @@ for name_of_space in spaces:
                 url_textbox.send_keys(
                     links[question])
                 url_textbox.send_keys(Keys.ENTER)
-                ans.send_keys(Keys.ARROW_RIGHT)
+                time.sleep(2)
+                ans.send_keys(Keys.ARROW_RIGHT + Keys.ENTER)
 
                 # try:
                 #     xpath_for_OK_btn = "//*[contains(text(), 'Add')]"
