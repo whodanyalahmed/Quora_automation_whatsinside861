@@ -78,6 +78,20 @@ driver = webdriver.Chrome(path)
 driver.maximize_window()
 
 
+def Click_on(tag, text):
+
+    driver.implicitly_wait(10)
+    try:
+        xpath_for_OK_btn = "//*[contains(text(), '"+text+"')]"
+
+        driver.find_element_by_xpath(
+            '//'+tag+'[.'+xpath_for_OK_btn + ']').click()
+        print('info: '+text+' button/text clicked')
+    except Exception as e:
+        print("error: "+text+" button/text not found")
+        print(e)
+
+
 def go_Home():
 
     try:
@@ -91,6 +105,7 @@ go_Home()
 # try filling email and password
 
 # loop on emails
+driver.implicitly_wait(10)
 for i in range(len(email)):
 
     try:
@@ -101,6 +116,27 @@ for i in range(len(email)):
     except NoSuchElementException:
         print("error: email or password not found")
 
+    # try login
+    Clicking_on('button', 'Login')
+    print("success: logged in")
+    time.sleep(3)
+    for l in range(len(links)):
+        try:
+            driver.get("{}".format(links[l]))
+            print('info: link loaded')
+        except selenium.common.exceptions.TimeoutException:
+            print("error: Page took too long to load")
 
-# try login
-Clicking_on('button', 'Login')
+        # try to click on comment
+        try:
+            Click_on('button', 'Comment')
+        except NoSuchElementException:
+            print("error: comment button not found")
+        try:
+            driver.find_element_by_xpath(
+                "div[@data-placeholder='Add a comment...']").send_keys(
+                "{}".format(comments[l]))
+            print('info: comment added')
+        except NoSuchElementException:
+            print("error: comment not added")
+# driver.quit()
