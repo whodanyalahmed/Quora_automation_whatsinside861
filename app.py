@@ -260,7 +260,7 @@ for name_of_space in spaces:
             time.sleep(5)
             try:
 
-                xpath_for_skip_import = "//span[@name='Close']"
+                xpath_for_skip_import = "//span[contains(text(), 'LOG IN')]"
                 skip_ele1 = driver.find_elements_by_xpath(
                     "//button[."+xpath_for_skip_import+"]")
                 # loop on skin_ele and get innerHTML
