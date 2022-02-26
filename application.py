@@ -30,6 +30,22 @@ print(comments)
 print(links)
 
 
+def chrome(headless=False):
+    # support to get response status and headers
+    d = webdriver.DesiredCapabilities.CHROME
+    d['loggingPrefs'] = {'performance': 'ALL'}
+    opt = webdriver.ChromeOptions()
+    if headless:
+        opt.add_argument("--headless")
+    opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+    opt.add_argument("--disable-popup-blocking")
+    browser = webdriver.Chrome(
+        executable_path=r'i://clients//chromedriver.exe', options=opt, desired_capabilities=d)
+    browser.implicitly_wait(10)
+    browser.maximize_window()
+    return browser
+
+
 cur_path = sys.path[0]
 
 
@@ -74,7 +90,7 @@ def Clicking_on(tag, text):
 # print("\n\nProcessing.....")
 
 
-driver = webdriver.Chrome(path)
+driver = chrome(headless=False)
 driver.maximize_window()
 
 
@@ -87,6 +103,31 @@ def Click_on(tag, text):
         driver.find_element_by_xpath(
             '//'+tag+'[.'+xpath_for_OK_btn + ']').click()
         print('info: '+text+' button/text clicked')
+    except Exception as e:
+        print("error: "+text+" button/text not found")
+        print(e)
+
+
+def last_of_Click_on(text):
+    # time.sleep(5)
+    try:
+
+        xpath_for_skip_import = "//span[@name='"+text+"']"
+        skip_ele1 = driver.find_elements_by_xpath(
+            "//button[."+xpath_for_skip_import+"]")
+        # loop on skin_ele and get innerHTML
+        # print("No. of close buttons: "+str(len(skip_ele1)))
+        ele_item = skip_ele1[0]
+        try:
+            print("info: "+text+" button/text using try clicked")
+            # ele_item.click()
+
+            driver.execute_script("arguments[0].click();", ele_item)
+        except:
+            print("error: "+text+" button/text not found now using except")
+            driver.execute_script("arguments[0].click();", ele_item)
+        print('info: '+text+' button/text clicked')
+
     except Exception as e:
         print("error: "+text+" button/text not found")
         print(e)
@@ -122,6 +163,7 @@ for i in range(len(email)):
     time.sleep(3)
     for l in range(len(links)):
         try:
+            print(links[l])
             driver.get("{}".format(links[l]))
             print('info: link loaded')
         except selenium.common.exceptions.TimeoutException:
@@ -129,14 +171,54 @@ for i in range(len(email)):
 
         # try to click on comment
         try:
-            Click_on('button', 'Comment')
+            last_of_Click_on('Comment')
         except NoSuchElementException:
             print("error: comment button not found")
+
+        # scroll 400px
+        # driver.execute_script(
+        #     "window.scrollTo(0, 500);")
+
         try:
-            driver.find_element_by_xpath(
-                "div[@data-placeholder='Add a comment...']").send_keys(
-                "{}".format(comments[l]))
+            try:
+                # wait for element to be visible
+                # comment_add = WebDriverWait(driver, 10).until(
+                #     EC.visibility_of_element_located((By.XPATH, 'div[@data-placeholder="Add a comment..."]')))
+                time.sleep(5)
+                print(comments[l])
+                comment_add = driver.find_element_by_xpath(
+                    '//div[@class="span"]')
+
+                # get the div in comment_add with attribute data-kind="span"
+                print(comment_add)
+                print('info: comment box opened')
+            except:
+                print("error: comment box not found add a comment")
+            comment_add.send_keys("{}".format(comments[l]))
             print('info: comment added')
-        except NoSuchElementException:
-            print("error: comment not added")
+
+            try:
+
+                Click_on('button', 'Add Comment')
+
+            except NoSuchElementException:
+                print("error: Add comment button not found")
+            time.sleep(5)
+        except:
+            print("cant type the commment")
+
+        # try:
+        #     print(comments[l])
+
+        #     driver.find_element_by_xpath(
+
+        #         'div[@data-placeholder="Add a comment..."]').send_keys(
+        #         "{}".format(comments[l]))
+        #     # press enter key
+        #     driver.find_element_by_xpath(
+        #         'div[@data-placeholder="Add a comment..."]').send_keys(
+        #         Keys.ENTER)
+        #     print('info: comment added')
+        # except NoSuchElementException:
+        #     print("error: comment not added")
 # driver.quit()
