@@ -26,6 +26,7 @@ comments = get_data_from_xlsx('Quora.xlsx', 'Post Comments', 'Comments')
 email = get_data_from_xlsx('Quora.xlsx', 'Accounts', 'Email')
 password = get_data_from_xlsx('Quora.xlsx', 'Accounts', 'Password')
 links = get_data_from_xlsx('Quora.xlsx', 'Post Link', 'Links')
+votes = get_data_from_xlsx('Quora.xlsx', 'Post Link', 'votes')
 print(comments)
 print(links)
 
@@ -108,7 +109,7 @@ def Click_on(tag, text):
         print(e)
 
 
-def last_of_Click_on(text):
+def last_of_Click_on(text, index):
     # time.sleep(5)
     try:
 
@@ -117,7 +118,7 @@ def last_of_Click_on(text):
             "//button[."+xpath_for_skip_import+"]")
         # loop on skin_ele and get innerHTML
         # print("No. of close buttons: "+str(len(skip_ele1)))
-        ele_item = skip_ele1[0]
+        ele_item = skip_ele1[index]
         try:
             print("info: "+text+" button/text using try clicked")
             # ele_item.click()
@@ -171,7 +172,7 @@ for i in range(len(email)):
 
         # try to click on comment
         try:
-            last_of_Click_on('Comment')
+            last_of_Click_on('Comment', 0)
         except NoSuchElementException:
             print("error: comment button not found")
 
@@ -197,12 +198,23 @@ for i in range(len(email)):
             comment_add.send_keys("{}".format(comments[l]))
             print('info: comment added')
 
+            driver.execute_script(
+                "window.scrollTo(0, 500);")
             try:
 
                 Click_on('button', 'Add Comment')
 
             except NoSuchElementException:
                 print("error: Add comment button not found")
+
+            try:
+                if(votes[l] == "Upvote"):
+                    last_of_Click_on('Upvote', -1)
+
+                else:
+                    last_of_Click_on('Downvote', -1)
+            except NoSuchElementException:
+                print("error: Voting button not found")
             time.sleep(5)
         except:
             print("cant type the commment")
