@@ -1,4 +1,4 @@
-from random import random
+import random
 from selenium import webdriver
 import selenium
 import sys
@@ -144,12 +144,12 @@ def go_Home():
         print("error: Page took too long to load")
 
 
-go_Home()
 # try filling email and password
 
 # loop on emails
 driver.implicitly_wait(10)
 for i in range(len(email)):
+    go_Home()
 
     try:
         driver.find_element_by_id("email").send_keys("{}".format(email[i]))
@@ -219,6 +219,8 @@ for i in range(len(email)):
             time.sleep(5)
         except:
             print("cant type the commment")
+    driver.delete_all_cookies()
+    driver.refresh()
     time.sleep(random.randint(120, 300))
     # try:
     #     print(comments[l])
@@ -234,4 +236,5 @@ for i in range(len(email)):
     #     print('info: comment added')
     # except NoSuchElementException:
     #     print("error: comment not added")
-# driver.quit()
+
+driver.quit()
