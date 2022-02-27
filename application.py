@@ -1,3 +1,4 @@
+from random import random
 from selenium import webdriver
 import selenium
 import sys
@@ -218,19 +219,19 @@ for i in range(len(email)):
             time.sleep(5)
         except:
             print("cant type the commment")
+    time.sleep(random.randint(120, 300))
+    # try:
+    #     print(comments[l])
 
-        # try:
-        #     print(comments[l])
+    #     driver.find_element_by_xpath(
 
-        #     driver.find_element_by_xpath(
-
-        #         'div[@data-placeholder="Add a comment..."]').send_keys(
-        #         "{}".format(comments[l]))
-        #     # press enter key
-        #     driver.find_element_by_xpath(
-        #         'div[@data-placeholder="Add a comment..."]').send_keys(
-        #         Keys.ENTER)
-        #     print('info: comment added')
-        # except NoSuchElementException:
-        #     print("error: comment not added")
+    #         'div[@data-placeholder="Add a comment..."]').send_keys(
+    #         "{}".format(comments[l]))
+    #     # press enter key
+    #     driver.find_element_by_xpath(
+    #         'div[@data-placeholder="Add a comment..."]').send_keys(
+    #         Keys.ENTER)
+    #     print('info: comment added')
+    # except NoSuchElementException:
+    #     print("error: comment not added")
 # driver.quit()
