@@ -121,7 +121,7 @@ def last_of_Click_on(text, index):
         # print("No. of close buttons: "+str(len(skip_ele1)))
         ele_item = skip_ele1[index]
         try:
-            print("info: "+text+" button/text using try clicked")
+            # print("info: "+text+" button/text using try clicked")
             # ele_item.click()
 
             driver.execute_script("arguments[0].click();", ele_item)
@@ -192,7 +192,7 @@ for i in range(len(email)):
     time.sleep(3)
     for l in range(len(links)):
         try:
-            print(links[l])
+            # print(links[l])
             driver.get("{}".format(links[l]))
             print('info: link loaded')
         except selenium.common.exceptions.TimeoutException:
@@ -238,15 +238,20 @@ for i in range(len(email)):
             try:
                 if(votes[l] == "Upvote"):
                     # get the element with attribute of name="Upvote"
-                    upvote_ele = driver.find_elements_by_name("Upvote")
-                    print("This is upvote ele : "+str(upvote_ele))
+                    upvote_ele = driver.find_elements_by_xpath(
+                        '//span[@name="Upvote"]')
+                    # get child span of upvote_ele
+                    upvote_ele_child = upvote_ele[0].find_elements_by_xpath(
+                        'span')
+                    # print("This is upvote ele : "+str(upvote_ele_child))
                     # get the class of upvote_ele
-                    for upvote_ele_class in upvote_ele:
-                        upvote_ele_class = upvote_ele_class.get_attribute(
+                    for upvote_ele_class in upvote_ele_child:
+                        up_Class = upvote_ele_class.get_attribute(
                             "class")
-                        print("This is upvote ele : "+str(upvote_ele_class))
+                        print("This is upvote ele : "+str(up_Class))
                     # check if class has name property ehQRNU
-                    if("ehQRNU" not in upvote_ele_class):
+                    if("clfUDQ" in up_Class):
+                        # if("ehQRNU" not in up_Class):
                         last_of_Click_on('Upvote', -1)
                         print("info: Upvote clicked")
                     else:
@@ -255,16 +260,20 @@ for i in range(len(email)):
                 else:
 
                     # get the element with attribute of name="Upvote"
-                    downvote_ele = driver.find_elements_by_name("Downvote")
-                    print("This is downvote ele : "+str(downvote_ele))
+                    downvote_ele = driver.find_elements_by_xpath(
+                        "//span[@name='Downvote']")
+                    # get child span of upvote_ele
+                    downvote_ele_child = downvote_ele[0].find_elements_by_xpath(
+                        'span')
+                    print("This is downvote ele : "+str(downvote_ele_child))
                     # get the class of downvote_ele
-                    for downvote_ele_class in downvote_ele:
-                        downvote_ele_class = downvote_ele_class.get_attribute(
+                    for downvote_ele_class in downvote_ele_child:
+                        down_Class = downvote_ele_class.get_attribute(
                             "class")
                         print("This is downvote ele : " +
-                              str(downvote_ele_class))
+                              str(down_Class))
                     # kJLai
-                    if("kJLai" not in upvote_ele_class):
+                    if("PsjsG" in down_Class):
                         last_of_Click_on('Downvote', -1)
                         print("info: Downvote clicked")
                     else:
