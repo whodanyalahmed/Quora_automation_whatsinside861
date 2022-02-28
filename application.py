@@ -145,9 +145,36 @@ def go_Home():
 
 
 # try filling email and password
+# check if url has 'time' keyword in it
+# if yes, then wait for 5 secondS
+def clear_cache_login():
+    # clear cache
+    driver.delete_all_cookies()
+    time.sleep(2)
+    driver.refresh()
+    print('info: cache cleared')
+    go_Home()
+    if('time' not in driver.title):
+        print('info: website isnt at login')
+        # click on div using driver with attribute aria-label="Account menu"
+        try:
+
+            driver.find_element_by_xpath(
+                "//div[@aria-label='Account menu']").click()
+            print("info : clicked on account menu")
+            # click on div with text logout
+            try:
+                driver.find_element_by_xpath(
+                    "//div[contains(text(),'Logout')]").click()
+                print("info : clicked on logout")
+            except Exception as e:
+                print("error : logout not found")
+        except Exception as e:
+            print(e)
+
 
 # loop on emails
-driver.implicitly_wait(10)
+driver.implicitly_wait(20)
 for i in range(len(email)):
     go_Home()
 
@@ -187,41 +214,79 @@ for i in range(len(email)):
                 # comment_add = WebDriverWait(driver, 10).until(
                 #     EC.visibility_of_element_located((By.XPATH, 'div[@data-placeholder="Add a comment..."]')))
                 time.sleep(5)
-                print(comments[l])
+                # print(comments[l])
                 comment_add = driver.find_element_by_xpath(
                     '//div[@class="span"]')
 
                 # get the div in comment_add with attribute data-kind="span"
-                print(comment_add)
                 print('info: comment box opened')
             except:
                 print("error: comment box not found add a comment")
             comment_add.send_keys("{}".format(comments[l]))
             print('info: comment added')
 
-            driver.execute_script(
-                "window.scrollTo(0, 500);")
             try:
 
                 Click_on('button', 'Add Comment')
 
             except NoSuchElementException:
                 print("error: Add comment button not found")
+            time.sleep(5)
 
+            driver.execute_script(
+                "window.scrollTo(0, 500);")
             try:
                 if(votes[l] == "Upvote"):
-                    last_of_Click_on('Upvote', -1)
+                    # get the element with attribute of name="Upvote"
+                    upvote_ele = driver.find_elements_by_name("Upvote")
+                    print("This is upvote ele : "+str(upvote_ele))
+                    # get the class of upvote_ele
+                    for upvote_ele_class in upvote_ele:
+                        upvote_ele_class = upvote_ele_class.get_attribute(
+                            "class")
+                        print("This is upvote ele : "+str(upvote_ele_class))
+                    # check if class has name property ehQRNU
+                    if("ehQRNU" not in upvote_ele_class):
+                        last_of_Click_on('Upvote', -1)
+                        print("info: Upvote clicked")
+                    else:
+                        print("info: Upvote already clicked")
 
                 else:
-                    last_of_Click_on('Downvote', -1)
+
+                    # get the element with attribute of name="Upvote"
+                    downvote_ele = driver.find_elements_by_name("Downvote")
+                    print("This is downvote ele : "+str(downvote_ele))
+                    # get the class of downvote_ele
+                    for downvote_ele_class in downvote_ele:
+                        downvote_ele_class = downvote_ele_class.get_attribute(
+                            "class")
+                        print("This is downvote ele : " +
+                              str(downvote_ele_class))
+                    # kJLai
+                    if("kJLai" not in upvote_ele_class):
+                        last_of_Click_on('Downvote', -1)
+                        print("info: Downvote clicked")
+                    else:
+                        print("info: Downvote already clicked")
+
             except NoSuchElementException:
                 print("error: Voting button not found")
-            time.sleep(5)
+
         except:
             print("cant type the commment")
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(random.randint(120, 300))
+    clear_cache_login()
+    # upvote
+    # CssComponent__CssInlineComponent-sc-1oskqb9-1 Icon___StyledCssInlineComponent-sc-11tmcw7-0 ehQRNU
+    # CssComponent__CssInlineComponent-sc-1oskqb9-1 Icon___StyledCssInlineComponent-sc-11tmcw7-0 dkqoIa
+
+    # downvote
+    # CssComponent__CssInlineComponent-sc-1oskqb9-1 Icon___StyledCssInlineComponent-sc-11tmcw7-0 kJLai
+    # dont wait if this is the last email
+    if(i != len(email)-1):
+        print("info : now waiting for 2-5 minutes")
+        time.sleep(random.randint(12, 30))
+
     # try:
     #     print(comments[l])
 
@@ -237,4 +302,4 @@ for i in range(len(email)):
     # except NoSuchElementException:
     #     print("error: comment not added")
 
-driver.quit()
+# driver.quit()
