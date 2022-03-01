@@ -174,7 +174,7 @@ def upvote_or_downvote():
 
         # print("This is upvote ele : "+str(up_Class))
         # check if class has name property ehQRNU
-        if(("dkqoIa" or "clfUDQ") in span_ele_child_class):
+        if(("dkqoIa") in span_ele_child_class):
             # if("ehQRNU" not in up_Class):
             last_of_Click_on('Upvote', -1)
             print("info: Upvote clicked")
@@ -281,8 +281,8 @@ for i in range(len(email)):
                 # wait for element to be visible
                 # comment_add = WebDriverWait(driver, 10).until(
                 #     EC.visibility_of_element_located((By.XPATH, 'div[@data-placeholder="Add a comment..."]')))
-                time.sleep(5)
                 # print(comments[l])
+
                 comment_add = driver.find_element_by_xpath(
                     '//div[@class="span"]')
 
@@ -299,8 +299,14 @@ for i in range(len(email)):
 
             except NoSuchElementException:
                 print("error: Add comment button not found")
-            time.sleep(5)
 
+            time.sleep(8)
+
+            try:
+                last_of_Click_on('Comment', 0)
+            except NoSuchElementException:
+                print("error: comment button not found")
+            time.sleep(5)
             driver.execute_script(
                 "window.scrollTo(0, 500);")
             while(True):
@@ -344,4 +350,4 @@ for i in range(len(email)):
     # except NoSuchElementException:
     #     print("error: comment not added")
 
-# driver.quit()
+driver.quit()
