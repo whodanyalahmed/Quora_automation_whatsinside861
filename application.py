@@ -1,4 +1,5 @@
 import random
+from bs4 import BeautifulSoup
 from selenium import webdriver
 import selenium
 import sys
@@ -144,6 +145,73 @@ def go_Home():
         print("error: Page took too long to load")
 
 
+def upvote_or_downvote():
+    # get source code of page
+    source = driver.page_source
+
+    soup = BeautifulSoup(source, 'html.parser')
+    if(votes[l] == "Upvote"):
+        # get the element with attribute of name="Upvote"
+        # get the span with name="Upvote" using beautiful soup
+
+        # get the span with name="Upvote" using beautiful soup
+        span_ele = soup.find_all('span', attrs={'name': 'Upvote'})
+
+        # get child span of upvote_ele
+        span_ele_child = span_ele[0].findChildren()
+        # get class attr of span_ele_child
+        span_ele_child_class = span_ele_child[0].get('class')[2]
+        print("using beautifulsoap: "+str(span_ele_child_class))
+        # upvote_ele = driver.find_elements_by_xpath(
+        #     '//span[@name="Upvote"]')
+        # get child span of upvote_ele
+        # upvote_ele_child = upvote_ele[0].find_element_by_xpath(
+        #     'span')
+        # print("This is upvote ele : "+str(upvote_ele_child))
+        # get the class of upvote_ele
+        # up_Class = upvote_ele_child.get_attribute(
+        #     "class")
+
+        # print("This is upvote ele : "+str(up_Class))
+        # check if class has name property ehQRNU
+        if(("dkqoIa" or "clfUDQ") in span_ele_child_class):
+            # if("ehQRNU" not in up_Class):
+            last_of_Click_on('Upvote', -1)
+            print("info: Upvote clicked")
+        else:
+            print("info: Upvote already clicked")
+
+    else:
+
+        # get the span with name="Upvote" using beautiful soup
+        span_ele_down = soup.find_all('span', attrs={'name': 'Downvote'})
+
+        # get child span of upvote_ele
+        span_ele_down_child = span_ele_down[0].findChildren()
+        # get class attr of span_ele_down_child
+        span_ele_down_child_class = span_ele_down_child[0].get('class')[2]
+
+        print("using beautifulsoap: "+str(span_ele_down_child_class))
+        # get the element with attribute of name="Upvote"
+        # downvote_ele = driver.find_elements_by_xpath(
+        #     "//span[@name='Downvote']")
+        # # get child span of upvote_ele
+        # downvote_ele_child = downvote_ele[0].find_element_by_xpath(
+        #     'span')
+        # # # get the class of downvote_ele
+        # # for downvote_ele_class in downvote_ele_child:
+        # down_Class = downvote_ele_child.get_attribute(
+        #     "class")
+        # print("This is downvote ele : " +
+        #       str(down_Class))
+        # kJLai
+        if("PsjsG" in span_ele_down_child_class):
+            last_of_Click_on('Downvote', -1)
+            print("info: Downvote clicked")
+        else:
+            print("info: Downvote already clicked")
+
+
 # try filling email and password
 # check if url has 'time' keyword in it
 # if yes, then wait for 5 secondS
@@ -170,7 +238,7 @@ def clear_cache_login():
             except Exception as e:
                 print("error : logout not found")
         except Exception as e:
-            print(e)
+            print("info: at login page")
 
 
 # loop on emails
@@ -235,55 +303,20 @@ for i in range(len(email)):
 
             driver.execute_script(
                 "window.scrollTo(0, 500);")
-            try:
-                if(votes[l] == "Upvote"):
-                    # get the element with attribute of name="Upvote"
-                    upvote_ele = driver.find_elements_by_xpath(
-                        '//span[@name="Upvote"]')
-                    # get child span of upvote_ele
-                    upvote_ele_child = upvote_ele[0].find_elements_by_xpath(
-                        'span')
-                    # print("This is upvote ele : "+str(upvote_ele_child))
-                    # get the class of upvote_ele
-                    for upvote_ele_class in upvote_ele_child:
-                        up_Class = upvote_ele_class.get_attribute(
-                            "class")
-                        print("This is upvote ele : "+str(up_Class))
-                    # check if class has name property ehQRNU
-                    if("clfUDQ" in up_Class):
-                        # if("ehQRNU" not in up_Class):
-                        last_of_Click_on('Upvote', -1)
-                        print("info: Upvote clicked")
-                    else:
-                        print("info: Upvote already clicked")
+            while(True):
+                try:
+                    upvote_or_downvote()
+                    break
+                except NoSuchElementException:
+                    time.sleep(1)
 
-                else:
+                    driver.execute_script(
+                        "window.scrollTo(0, 500);")
+                    print("error: Voting button not found")
+                    continue
 
-                    # get the element with attribute of name="Upvote"
-                    downvote_ele = driver.find_elements_by_xpath(
-                        "//span[@name='Downvote']")
-                    # get child span of upvote_ele
-                    downvote_ele_child = downvote_ele[0].find_elements_by_xpath(
-                        'span')
-                    print("This is downvote ele : "+str(downvote_ele_child))
-                    # get the class of downvote_ele
-                    for downvote_ele_class in downvote_ele_child:
-                        down_Class = downvote_ele_class.get_attribute(
-                            "class")
-                        print("This is downvote ele : " +
-                              str(down_Class))
-                    # kJLai
-                    if("PsjsG" in down_Class):
-                        last_of_Click_on('Downvote', -1)
-                        print("info: Downvote clicked")
-                    else:
-                        print("info: Downvote already clicked")
-
-            except NoSuchElementException:
-                print("error: Voting button not found")
-
-        except:
-            print("cant type the commment")
+        except Exception as e:
+            print("cant type the commment " + str(e))
     clear_cache_login()
     # upvote
     # CssComponent__CssInlineComponent-sc-1oskqb9-1 Icon___StyledCssInlineComponent-sc-11tmcw7-0 ehQRNU
