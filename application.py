@@ -205,7 +205,7 @@ def upvote_or_downvote():
         # print("This is downvote ele : " +
         #       str(down_Class))
         # kJLai
-        if("PsjsG" in span_ele_down_child_class):
+        if(("PsjsG") == str(span_ele_down_child_class)):
             last_of_Click_on('Downvote', -1)
             print("info: Downvote clicked")
         else:
@@ -271,7 +271,7 @@ for i in range(len(email)):
             last_of_Click_on('Comment', 0)
         except NoSuchElementException:
             print("error: comment button not found")
-
+        time.sleep(5)
         # scroll 400px
         # driver.execute_script(
         #     "window.scrollTo(0, 500);")
@@ -290,6 +290,8 @@ for i in range(len(email)):
                 print('info: comment box opened')
             except:
                 print("error: comment box not found add a comment")
+            # go to the top of the page
+            driver.execute_script("window.scrollTo(0, 0);")
             comment_add.send_keys("{}".format(comments[l]))
             print('info: comment added')
 
